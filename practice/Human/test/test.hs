@@ -11,3 +11,7 @@ tests = TestList [ TestLabel "test1" test1,
 
 main = do
   runTestTT tests
+
+
+-- to test: 
+-- runhaskell -i../main test.hs
