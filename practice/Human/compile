@@ -1,0 +1,10 @@
+#!/bin/bash
+
+# compile source:
+ghc -o test test.hs
+
+# remove intermediates:
+rm -f *.{hi,o}
+
+# run test
+./test
