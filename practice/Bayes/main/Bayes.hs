@@ -8,6 +8,10 @@
 module Bayes (
 ) where
 
+import Text.Regex
+import Text.Regex.Base
+import Data.Array ((!))
+
 braces :: String -> [(Int,Int)]
 braces = go 0 [] -- fn named go, which takes the starting idx and accumulator of paren idx []
   where 
@@ -18,11 +22,33 @@ braces = go 0 [] -- fn named go, which takes the starting idx and accumulator of
     go j (i:is)  ('}' : cs) = (i,j) : go (j+1) is      cs
     go j acc     (c   : cs) =         go (j+1) acc     cs
 
+
+--import System.IO
+--s <- readFile "../resource/test.model"
+
+strip :: String -> String
+strip s = do
+  let rgx = makeRegex "\n" :: Regex
+  let withSemiColon = subRegex rgx s ";"
+  let spaceLessRgx = makeRegex "\\s" :: Regex
+  subRegex spaceLessRgx withSemiColon ""
+
+getData :: String -> String
+getData s = do
+  let rgx = makeRegex "Data\\w+{.*}" :: Regex
+  let (pos,len) = head (matchRegexAll rgx s) :: (Int,Int)
+  tail $ take len $ splitAt pos s
+
+--let rgx = makeRegex "Data.*\\{[.\\|\\n]*\\}" :: Regex
+--let (pos,len) = head $ map (!0) $ matchAll rgx s :: (Int, Int)
+
+
+
 -- braces "abd{adsad}{def}"
 
--- import Text.Regex
--- import Text.Regex.Base
--- import Data.Array ((!))
+
+
+
 -- let pat = mkRegex "[()]"
 -- splitRegex pat "abc(bla(beef))def" 
 
