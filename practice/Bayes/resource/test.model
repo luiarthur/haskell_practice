@@ -1,0 +1,14 @@
+Data {
+  y: Vector[Int]
+  X: Matrix[Double]
+}
+
+Parameters {
+  beta: Vector[Double]
+}
+
+Model {
+  y[i] | p[i] ~ Binomial(p[i])
+} where {
+  p[i] = 1 / (1 + exp(-X[i,] * beta))
+}
