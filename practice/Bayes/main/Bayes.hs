@@ -12,8 +12,9 @@ import Text.Regex
 import Text.Regex.Base
 import Data.Array ((!))
 
+-- finds all pairs of braces
 braces :: String -> [(Int,Int)]
-braces = go 0 [] -- fn named go, which takes the starting idx and accumulator of paren idx []
+braces = go 0 []
   where 
     go _ []      []         = []
     go _ (_:_)   []         = error "unbalanced braces!"
@@ -23,37 +24,18 @@ braces = go 0 [] -- fn named go, which takes the starting idx and accumulator of
     go j acc     (c   : cs) =         go (j+1) acc     cs
 
 
---import System.IO
---s <- readFile "../resource/test.model"
-
+-- replaces all "\n" with ";"
 strip :: String -> String
 strip s = do
   let rgx = makeRegex "\n" :: Regex
-  let withSemiColon = subRegex rgx s ";"
-  let spaceLessRgx = makeRegex "\\s" :: Regex
-  subRegex spaceLessRgx withSemiColon ""
+  subRegex rgx s ";"
 
-getData :: String -> String
-getData s = do
-  let rgx = makeRegex "Data\\w+{.*}" :: Regex
-  let (pos,len) = head (matchRegexAll rgx s) :: (Int,Int)
-  tail $ take len $ splitAt pos s
+getField :: String -> String -> String
+getField s field = do
+  let rgx = makeRegex (field ++ "\\s*\\{[^\\{]+}") :: Regex
+  let Just(_,dat,_,_) = matchRegexAll rgx (strip s)
+  dat
 
---let rgx = makeRegex "Data.*\\{[.\\|\\n]*\\}" :: Regex
---let (pos,len) = head $ map (!0) $ matchAll rgx s :: (Int, Int)
-
-
-
--- braces "abd{adsad}{def}"
-
-
-
-
--- let pat = mkRegex "[()]"
--- splitRegex pat "abc(bla(beef))def" 
-
--- let pat = makeRegex "[()]" :: Regex
--- let m = matchAll pat "abc(bla(beef))def"
--- let x = map (\(a,b) -> a :: Int) $ map(!0) m
-
-
+-- quick tests:
+-- import System.IO
+-- s <- readFile "../resource/test.model"
