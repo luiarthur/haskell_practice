@@ -30,6 +30,7 @@ strip s = do
   let rgx = makeRegex "\n" :: Regex
   subRegex rgx s ";"
 
+-- gets specified fields enclosed in braces from string
 getField :: String -> String -> String
 getField s field = do
   let rgx = makeRegex (field ++ "\\s*\\{[^\\{]+}") :: Regex
