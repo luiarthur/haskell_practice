@@ -28,7 +28,10 @@ braces = go 0 []
 strip :: String -> String
 strip s = do
   let rgx = makeRegex "\n" :: Regex
-  subRegex rgx s ";"
+  let withSemiColon = subRegex rgx s ";"
+  let rgxNoSpace = makeRegex "\\s+" :: Regex
+  let noSpace = subRegex rgxNoSpace withSemiColon ""
+  noSpace
 
 -- gets specified fields enclosed in braces from string
 getField :: String -> String -> String
