@@ -1,0 +1,21 @@
+Data {
+  M: Vector[Double]
+  N1: Vector[Int]
+  N0: Vector[Int]
+  n1: Vector[Int]
+}
+
+Likelihood {
+
+  log(M[s]) | m[s], w2 ~ Normal( log(m[s]), w2 )
+
+  n1[s] | N1[s], p[s] ~ Binom(N1[s], p[s])
+
+  log(N1[s] / N0[s]) | m[s], sig2, mu ~ Normal(log((2*(1-mu)+mu*m[s])/2)+phi[s], sig2)
+
+} where {
+  p[s] = (mu*v[s]*m[s]) / (2*(1-mu)+mu*m[s])
+}
+
+Prior {
+}
