@@ -48,19 +48,20 @@ reDistr = re.compile("\w+(?=\()")
 # get G0 for DP
 reDPType = re.compile("(?<=G0=)\w+(?=\()")
 
+def getRcppFunSig(s, fName):
+    return "List " + fName + "(" + getRcppFunArg(s) + ")"
+
+
 # get param
-reParam = re.compile("\w+(?=(\[|~))") # check
+reParam = re.compile("\w+(?=(\[|~)?)") # check
 
 def getRcppParamType(s):
     prior = getField(s, "Prior")
     prior_elem = reElem.findall(prior)
     sep = map(lambda x: str.split(x,"~"), prior_elem)
     pType = [ "NumericMatrix" if ("[" in p[0]) else "NumericVector" for p in sep ]
-    return zip(pType, map(lambda p: p[0],sep))
-
-
-def getRcppFunSig(s, fName):
-    return "List " + fName + "(" + getRcppFunArg(s) + ")"
+    zs = zip(pType, map(lambda p: reParam.search(p[0]).group(), sep))
+    return map(lambda z: z[0] + " " + z[1] , zs)
 
 
 ## Tests:
