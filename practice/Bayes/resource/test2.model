@@ -1,8 +1,9 @@
 Data {
-  M: Vector[Double]
-  N1: Vector[Int]
-  N0: Vector[Int]
-  n1: Vector[Int]
+  M:  vector<double>
+  N1: vector<int>
+  N0: vector<int>
+  n1: vector<int>
+  x: int
 }
 
 
@@ -10,7 +11,6 @@ Likelihood {
   log(M[s]) | m[s], w2 ~ Normal( log(m[s]), w2 )
   n1[s] | N1[s], p[s] ~ Binom(N1[s], p[s])
   log(N1[s]/N0[s]) | m[s], sig2, mu ~ Normal(z[s], sig2)
-
 } where {
   p[s] = (mu*v[s]*m[s]) / (2*(1-mu)+mu*m[s])
   z[s] = log((2*(1-mu)+mu*m[s])/2)+phi[s]
@@ -18,11 +18,11 @@ Likelihood {
 
 
 Prior {
-  v[s] | G ~ G
-         G ~ DP(alpha, Beta(aG,bG))
+  v[s] | G ~ G ~ DP(alpha, Beta(aG,bG))
   mu ~ Beta(aMu, bMu)
   phi[s] ~ Normal(mPhi, s2Phi)
-  sig2 ~ IG(aSig, bSig)
+  sig2 ~ InvGamma(aSig, bSig)
   m[s] ~ Gamma(aM, bM)
-  w2 ~ IG(aW, bW)
+  w2 ~ InvGamma(aW, bW)
 }
+
