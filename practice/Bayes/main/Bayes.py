@@ -48,26 +48,25 @@ reDistr = re.compile("\w+(?=\()")
 # get G0 for DP
 reDPType = re.compile("(?<=G0=)\w+(?=\()")
 
-def getRcppReturnType(s):
+# get param
+reParam = re.compile("\w+(?=(\[|~))") # check
+
+def getRcppParamType(s):
     prior = getField(s, "Prior")
     prior_elem = reElem.findall(prior)
     sep = map(lambda x: str.split(x,"~"), prior_elem)
-    distr = map(lambda x: reDistr.search(x[-1]).group() , sep)
-    # if any of them are DP, then redo those and get reDPType
-    indDP = [ i for i in xrange(len(distr)) if distr[i]=='DP']
-    for i in indDP:
-        distr[i] = reDPType.search(sep[i][-1]).group()
-    retType = map(lambda d: rvType[rvSupport[d]] , distr)
-    retContainer = [None] * len(distr)
-    # FIXME: STOPPED HERE
-    for r in retType:
-        retContainer = "NumericVector"
-    return retContainer
+    pType = [ "NumericMatrix" if ("[" in p[0]) else "NumericVector" for p in sep ]
+    return zip(pType, map(lambda p: p[0],sep))
+
+
+def getRcppFunSig(s, fName):
+    return "List " + fName + "(" + getRcppFunArg(s) + ")"
+
 
 ## Tests:
 
 s = parseFile("../resource/test2.model")
 getRcppFunArg(s)
-getRcppReturnType(s)
-
+getRcppParamType(s)
+getRcppFunSig(s, "myFunc")
 
