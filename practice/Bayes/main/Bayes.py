@@ -1,15 +1,27 @@
 import re
 
+
 def parseFile(path):
     f = open(path)
     fileContents = f.read()
     f.close()
-    return fileContents
+    #
+    noReturn = re.sub('\n', ';', fileContents)
+    noSpace = re.sub('\s+', '', noReturn)
+    cleanFileContents = re.sub(';+', ';', noSpace)
+    #
+    return cleanFileContents
 
+
+def getField(s, field):
+    return re.search(field + "\{[^{]+\}", s).group()
+
+
+## Tests:
 
 s = parseFile("../resource/test2.model")
 
-r = re.compile(r'ha{2}')
-h = r.search('I am haha')
 
-print h
+#def getParam(s):
+data = getField(s, "Data")
+datum = re.match(";(^;)+;", data) # FIXME
