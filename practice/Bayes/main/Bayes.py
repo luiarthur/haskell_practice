@@ -1,16 +1,24 @@
 import re
 
-rvSupport = {'Beta': 'unity', 
-             'Normal': 'real', 
-             'Gamma': 'positiveReal',
-             'InvGamma': 'positiveReal',
-             'DP': 'G0'}
+rvSupport = {
+    'Beta': 'unity', 
+    'Normal': 'real', 
+    'Gamma': 'positiveReal',
+    'InvGamma': 'positiveReal',
+    'DP': 'G0'
+}
 
-rvType = {'unity': 'double', 
-          'real': 'double',
-          'positiveReal': 'double',
-          'G0': 'G0'}
+rvType = {
+    'unity': 'double', 
+    'real': 'double',
+    'positiveReal': 'double',
+    'G0': 'G0'
+}
 
+
+logpdf = {
+    'Normal(x,m,s2)': '-.5*(2*pi*s2) -.5*(x-m)^2/s2',
+}
 
 def parseFile(path):
     f = open(path)
@@ -38,7 +46,7 @@ def getRcppFunArg(s):
     sep = map(lambda x: str.split(x,":"), data_elem)
     param = [ e[0] for e in sep ]
     paramType = [re.sub("vector","std::vector",e[1]) for e in sep]
-    args = map(lambda z: z[0] + " " + z[1], zip(param,paramType))
+    args = map(lambda z: z[1] + " " + z[0], zip(param,paramType))
     return str.join(", ", args)
 
 
@@ -62,6 +70,20 @@ def getRcppParamType(s):
     pType = [ "NumericMatrix" if ("[" in p[0]) else "NumericVector" for p in sep ]
     zs = zip(pType, map(lambda p: reParam.search(p[0]).group(), sep))
     return map(lambda z: z[0] + " " + z[1] , zs)
+
+
+# STOPPED HERE FIXME
+
+def getSamplingDen(s):
+    like = getField(s, "Likelihood")
+    like_elem = reElem.findall(like)
+    arg = map(lambda x: str.split(x,"|")[0], like_elem)
+    den = map(lambda x: str.split(x,"~")[-1], like_elem)
+    pass
+
+
+def getFullCond(s):
+    pass
 
 
 ## Tests:
