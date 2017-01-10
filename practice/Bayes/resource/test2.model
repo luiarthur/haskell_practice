@@ -18,7 +18,7 @@ Likelihood {
 
 
 Prior {
-  v[s] | G ~ G ~ DP(alpha, Beta(aG,bG))
+  v[s] | G ~ G ~ DP(alpha, G0=Beta(aG,bG))
   mu ~ Beta(aMu, bMu)
   phi[s] ~ Normal(mPhi, s2Phi)
   sig2 ~ InvGamma(aSig, bSig)
