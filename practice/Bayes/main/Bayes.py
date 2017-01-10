@@ -54,9 +54,15 @@ def getRcppReturnType(s):
     sep = map(lambda x: str.split(x,"~"), prior_elem)
     distr = map(lambda x: reDistr.search(x[-1]).group() , sep)
     # if any of them are DP, then redo those and get reDPType
-    # FIXME Stopped here.
-
-
+    indDP = [ i for i in xrange(len(distr)) if distr[i]=='DP']
+    for i in indDP:
+        distr[i] = reDPType.search(sep[i][-1]).group()
+    retType = map(lambda d: rvType[rvSupport[d]] , distr)
+    retContainer = [None] * len(distr)
+    # FIXME: STOPPED HERE
+    for r in retType:
+        retContainer = "NumericVector"
+    return retContainer
 
 ## Tests:
 
